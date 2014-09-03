@@ -52,11 +52,7 @@ trait RequestAttributeKey[A]
 class RequestWithAttributes[A](underlying: Request[A], attributes: TrieMap[RequestAttributeKey[_], Any]) extends WrappedRequest[A](underlying) {
 
   def get[B](key: RequestAttributeKey[B]): Option[B] =
-    attributes.get(key).flatMap { item =>
-      try Some(item.asInstanceOf[B]) catch {
-        case _: ClassCastException => None
-      }
-    }
+    attributes.get(key).asInstanceOf[Option[B]]
 
   /** side effect! */
   def set[B](key: RequestAttributeKey[B], value: B): RequestWithAttributes[A] = {
